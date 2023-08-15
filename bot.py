@@ -96,19 +96,6 @@ def create_embed(ctx, *dice:str):
     return embed,file
 
 @bot.command()
-async def test(ctx):
-    image_array = [['./dadi/d20/d20_1.jpg', './dadi/d20/d20_13.jpg']]
-    embeddedImage = create_collage_from_array(image_array)
-    embed = discord.Embed(
-                        title="TEST",
-                        description=(f"---Questo è un messaggio di esempio con più immagini.\n"),
-                        color=discord.Color.blue()
-                )
-    file = discord.File("./output_collage_array.jpg")
-    embed.set_image(url="attachment://" + embeddedImage)
-    await ctx.send(embed=embed,file=file)
-
-@bot.command()
 async def roll(ctx, *dice: str):
     embed_message,embed_file = create_embed(ctx, *dice)
     await ctx.send(embed=embed_message,file=embed_file)
