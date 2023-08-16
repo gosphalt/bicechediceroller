@@ -16,6 +16,39 @@ intents.presences = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+class DiceView(discord.ui.View):
+    def __init__(self):
+        super().__init__()
+
+        dice_options = [
+            ("D4", 4),
+            ("D6", 6),
+            ("D8", 8),
+            ("D10", 10),
+            ("D12", 12),
+            ("D20", 20),
+        ]
+
+        for label, sides in dice_options:
+            button = discord.ui.Button(label=label, custom_id=str(sides))
+            self.add_item(button)
+
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        check = interaction.user == self.ctx.author 
+        return check
+
+@bot.command()
+async def rolltest(ctx):
+    view = DiceView()
+    view.ctx = ctx
+    await ctx.send("Scegli il dado da lanciare:", view=view)
+
+@bot.event
+async def on_button_click(interaction):
+    sides = int(interaction.custom_id)
+    result = discord.utils.random.choice(range(1, sides + 1))
+    await interaction.response.send_message(f"Hai lanciato un D{sides} e hai ottenuto {result}!", ephemeral=True)
+
 @bot.event
 async def on_ready():
     print(f'Bot is ready as {bot.user}')
